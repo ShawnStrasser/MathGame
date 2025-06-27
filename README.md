@@ -16,45 +16,97 @@ MathGame/
 └── README.md         # This file
 ```
 
+## Deploying to PythonAnywhere (from GitHub)
+
+### 1. Push Your Project to GitHub
+If you haven't already:
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/yourusername/mathgame.git
+git push -u origin main
+```
+
+### 2. Clone on PythonAnywhere
+- Open a **Bash console** on PythonAnywhere
+- Run:
+```bash
+git clone https://github.com/yourusername/mathgame.git
+cd mathgame
+```
+
+### 3. Set Up Python 3.12 Virtual Environment
+```bash
+python3.12 -m venv venv
+source venv/bin/activate
+cd backend
+pip install -r requirements.txt
+```
+
+### 4. Configure Your Web App
+- Go to the **Web** tab on PythonAnywhere
+- Click **Add a new web app**
+- Choose **Manual configuration** (not Flask)
+- Select **Python 3.12**
+
+### 5. Configure WSGI File
+- In the **Web** tab, click the WSGI configuration file link
+- Replace everything with:
+```python
+import sys
+import os
+
+path = '/home/yourusername/mathgame/backend'
+if path not in sys.path:
+    sys.path.append(path)
+
+from app import app as application
+```
+- Replace `yourusername` with your PythonAnywhere username
+- Save the file
+
+### 6. Configure Static Files
+- In the **Web** tab, scroll to **Static files**
+- Add these mappings:
+  - **URL**: `/static/` → **Directory**: `/home/yourusername/mathgame/frontend/dist/`
+  - **URL**: `/api/images/` → **Directory**: `/home/yourusername/mathgame/backend/images/`
+
+### 7. Reload and Test
+- Click **Reload** in the Web tab
+- Visit `https://yourusername.pythonanywhere.com` to test your app
+
+---
+
+**Troubleshooting:**
+- Check error logs in the Web tab if something doesn't work
+- Make sure your username and file paths are correct in the WSGI and static file settings
+- Ensure you are using Python 3.12 everywhere
+
+---
+
+**File structure after cloning should look like:**
+```
+/home/yourusername/mathgame/
+├── backend/
+│   ├── app.py
+│   ├── wsgi.py
+│   ├── requirements.txt
+│   └── images/
+│       ├── 1.png
+│       ├── 2.png
+│       ├── 3.png
+│       └── 4.png
+└── frontend/
+    └── dist/
+        ├── index.html
+        └── assets/
+            ├── index-xxxx.css
+            └── index-xxxx.js
+```
+
 ## Setup Instructions
 
 ### Backend Setup
-```bash
-cd backend
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-pip install -r requirements.txt
-python app.py
 ```
-
-### Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Development Commands
-
-### Start Backend Server
-```bash
-cd backend
-python app.py
-```
-Server will run on http://localhost:5000
-
-### Start Frontend Development Server
-```bash
-cd frontend
-npm run dev
-```
-Frontend will run on http://localhost:5173
-
-## How to Play
-1. Choose a difficulty level
-2. Solve math problems to reveal parts of the hidden image
-3. Complete the image to win! 
