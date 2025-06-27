@@ -3,7 +3,11 @@ from flask_cors import CORS
 import random
 import os
 
-app = Flask(__name__, static_folder='../frontend/dist', static_url_path='')
+# Get the absolute path to the project root
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIST = os.path.join(PROJECT_ROOT, 'frontend', 'dist')
+
+app = Flask(__name__)
 CORS(app)
 
 IMAGE_FOLDER = os.path.join(os.path.dirname(__file__), 'images')
@@ -117,11 +121,11 @@ def serve_image(filename):
 
 @app.route('/')
 def serve_frontend():
-    return send_file(os.path.join(os.path.dirname(__file__), '../frontend/dist/index.html'))
+    return send_file(os.path.join(FRONTEND_DIST, 'index.html'))
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory(os.path.join(os.path.dirname(__file__), '../frontend/dist'), path)
+    return send_from_directory(FRONTEND_DIST, path)
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5000) 
